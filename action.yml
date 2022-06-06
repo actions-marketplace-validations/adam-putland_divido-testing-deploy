@@ -23,7 +23,6 @@ runs:
           token: ${{ secrets.ORG_TOKEN }} 
           path: ${{ github.event.inputs.environment }}
 
-  ## change to versions.yaml file
     - run: echo Hello ${{ inputs.who-to-greet }}.
       shell: bash
 
