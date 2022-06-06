@@ -23,14 +23,14 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - run: echo Hello ${{ inputs }}.
+      shell: bash
+
     - uses: actions/checkout@v2
       with:
-          repository: ${{ github.event.inputs.org_name }}/${{ github.event.inputs.environment }}
-          token: ${{ github.event.inputs.github_token}}
-          path: ${{ github.event.inputs.environment }}
-
-    - run: echo Hello ${{ inputs.who-to-greet }}.
-      shell: bash
+          repository: ${{ inputs.org_name }}/${{ inputs.environment }}
+          token: ${{ inputs.github_token}}
+          path: ${{ inputs.environment }}
 
     - uses: EndBug/add-and-commit@v4
       with:
@@ -38,7 +38,7 @@ runs:
         author_email: adam.putland@divido.com
         message: "fix(autocomit): Automatic service bump"
         add: "."
-        cwd: "./{{ github.event.inputs.environment }}"
+        cwd: "./{{ inputs.environment }}"
         force: true
       env:
-        GITHUB_TOKEN: ${{ github.event.inputs.github_token}}
+        GITHUB_TOKEN: ${{ inputs.github_token}}
