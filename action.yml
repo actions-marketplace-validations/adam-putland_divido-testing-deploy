@@ -14,13 +14,19 @@ inputs:
     description: 'The org'
     required: false
     default: 'adam-putland'
+  
+  # Input not required from the user
+  github_token:
+    description: The token used to make requests to the GitHub API. It's NOT used to make commits and should not be changed.
+    required: false
+    default: ${{ github.token }}
 runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v2
       with:
           repository: ${{ github.event.inputs.org_name }}/${{ github.event.inputs.environment }}
-          token: ${{ secrets.ORG_TOKEN }} 
+          token: ${{ github.event.inputs.github_token}}
           path: ${{ github.event.inputs.environment }}
 
     - run: echo Hello ${{ inputs.who-to-greet }}.
@@ -35,4 +41,4 @@ runs:
         cwd: "./{{ github.event.inputs.environment }}"
         force: true
       env:
-        GITHUB_TOKEN: ${{ secrets.ORG_TOKEN }}
+        GITHUB_TOKEN: ${{ github.event.inputs.github_token}}
