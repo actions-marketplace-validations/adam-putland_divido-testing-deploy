@@ -23,14 +23,21 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - run: echo Hello ${{ inputs }}.
-      shell: bash
-
     - uses: actions/checkout@v2
       with:
           repository: ${{ inputs.org_name }}/${{ inputs.environment }}
           token: ${{ inputs.github_token}}
           path: ${{ inputs.environment }}
+    
+    - run: ls
+      shell: bash
+
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '1.16.1' # The Go version to download (if necessary) and use.
+    
+    - run: go run main.go
+      shell: bash
 
     - uses: EndBug/add-and-commit@v4
       with:
