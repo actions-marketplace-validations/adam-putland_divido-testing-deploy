@@ -1,12 +1,41 @@
 name: 'Divido Testing Deploy'
-description: 'Deploy to testing environements via overrides'
+description: 'Deploy to testing environements via override'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  service-name:
+    description: 'Name of the service'
     required: true
-    default: 'World'
+  service-version:
+    description: 'Version of the service'
+    required: true
+  environment:
+    description: 'The testing environment to put the override in'
+    required: true
+  org_name:
+    description: 'The org'
+    required: false
+    default: 'adam-putland'
 runs:
   using: "composite"
   steps:
+    - name: Checkout testing environment repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.inputs.org_name }}/${{ github.event.inputs.environment }}
+          token: ${{ secrets.ORG_TOKEN }} 
+          path: ${{ github.event.inputs.environment }}
+
+  ## change to versions.yaml file
     - run: echo Hello ${{ inputs.who-to-greet }}.
       shell: bash
+
+    - name: Add and Commit
+    uses: EndBug/add-and-commit@v4
+    with:
+      author_name: adam
+      author_email: adam.putland@divido.com
+      message: "fix(autocomit): Automatic service bump"
+      add: "."
+      cwd: "./{{ github.event.inputs.environment }}"
+      force: true
+    env:
+      GITHUB_TOKEN: ${{ secrets.ORG_TOKEN }}
