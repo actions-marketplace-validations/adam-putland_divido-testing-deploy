@@ -17,25 +17,24 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout testing environment repository
+     - name: Checkout testing environment repository
         uses: actions/checkout@v2
         with:
           repository: ${{ github.event.inputs.org_name }}/${{ github.event.inputs.environment }}
           token: ${{ secrets.ORG_TOKEN }} 
           path: ${{ github.event.inputs.environment }}
 
-  ## change to versions.yaml file
     - run: echo Hello ${{ inputs.who-to-greet }}.
       shell: bash
 
     - name: Add and Commit
-    uses: EndBug/add-and-commit@v4
-    with:
-      author_name: adam
-      author_email: adam.putland@divido.com
-      message: "fix(autocomit): Automatic service bump"
-      add: "."
-      cwd: "./{{ github.event.inputs.environment }}"
-      force: true
-    env:
-      GITHUB_TOKEN: ${{ secrets.ORG_TOKEN }}
+      uses: EndBug/add-and-commit@v4
+      with:
+        author_name: adam
+        author_email: adam.putland@divido.com
+        message: "fix(autocomit): Automatic service bump"
+        add: "."
+        cwd: "./{{ github.event.inputs.environment }}"
+        force: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.ORG_TOKEN }}
